@@ -1,0 +1,119 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Universal default-deny catch-all rule
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && 
+             request.auth.token.email == "laxmikormokar70@gmail.com";
+    }
+
+    // User profile validator
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'name', 'email', 'createdAt']) &&
+             data.keys().size() <= 30 &&
+             data.uid is string &&
+             data.uid.size() <= 128 &&
+             data.name is string &&
+             data.name.size() <= 128 &&
+             data.email is string &&
+             data.email.size() <= 128 &&
+             // Optional fields validation
+             (!data.keys().hasAny(['phone']) || (data.phone is string && data.phone.size() <= 64)) &&
+              (!data.keys().hasAny(['dob']) || (data.dob is string || data.dob == null)) &&
+             (!data.keys().hasAny(['profilePhoto']) || (data.profilePhoto is string && data.profilePhoto.size() <= 2048)) &&
+             (!data.keys().hasAny(['is2FAEnabled']) || (data.is2FAEnabled is bool)) &&
+             (!data.keys().hasAny(['twoFactorSecret']) || (data.twoFactorSecret is string)) && 
+             (!data.keys().hasAny(['securitySecret']) || (data.securitySecret is string && data.securitySecret.size() <= 128)) &&
+             (!data.keys().hasAny(['staticPin']) || (data.staticPin is string && data.staticPin.size() <= 32)) &&
+             (!data.keys().hasAny(['customUid']) || (data.customUid is string && data.customUid.size() <= 64)) &&
+             (!data.keys().hasAny(['country']) || (data.country is string && data.country.size() <= 128)) &&
+             (!data.keys().hasAny(['state']) || (data.state is string && data.state.size() <= 128)) &&
+             (!data.keys().hasAny(['city']) || (data.city is string && data.city.size() <= 128)) &&
+             (!data.keys().hasAny(['address']) || (data.address is string && data.address.size() <= 512)) &&
+             (!data.keys().hasAny(['gender']) || (data.gender is string && data.gender.size() <= 64)) &&
+             (!data.keys().hasAny(['verified']) || (data.verified is bool)) &&
+             (!data.keys().hasAny(['aadhaarNumber']) || (data.aadhaarNumber is string && data.aadhaarNumber.size() <= 64)) &&
+             (!data.keys().hasAny(['kycRejectReason']) || (data.kycRejectReason is string || data.kycRejectReason == null)) &&
+             (!data.keys().hasAny(['kycSuccessReason']) || (data.kycSuccessReason is string || data.kycSuccessReason == null)) &&
+             (!data.keys().hasAny(['currencyPreference']) || (data.currencyPreference is string && data.currencyPreference.size() <= 16)) &&
+             (!data.keys().hasAny(['role']) || (data.role is string && data.role.size() <= 16)) &&
+             (!data.keys().hasAny(['status']) || (data.status is string && data.status.size() <= 16)) &&
+             (!data.keys().hasAny(['kycStatus']) || (data.kycStatus is string && data.kycStatus.size() <= 32)) &&
+             (!data.keys().hasAny(['realBalanceUSD']) || (data.realBalanceUSD is number)) &&
+             (!data.keys().hasAny(['realBalanceINR']) || (data.realBalanceINR is number));
+    }
+
+    // Mated permissions
+    match /users/{userId} {
+      allow get: if (isOwner(userId) || isAdmin()) && isValidId(userId);
+      allow list: if isAdmin();
+      allow create: if isOwner(userId) && isValidId(userId) && isValidUser(request.resource.data);
+      allow update: if (isOwner(userId) || isAdmin()) && isValidId(userId) && isValidUser(request.resource.data);
+      allow delete: if isAdmin() && isValidId(userId);
+    }
+
+    match /deposits/{depositId} {
+      allow get: if isSignedIn() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow list: if isAdmin() || isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    match /withdrawals/{withdrawalId} {
+      allow get: if isSignedIn() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow list: if isAdmin() || isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    match /kyc_submissions/{submissionId} {
+      allow get: if isSignedIn() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow list: if isAdmin() || isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    match /tickets/{ticketId} {
+      allow get: if isSignedIn() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow list: if isAdmin() || isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+      allow update: if isSignedIn() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    match /logins/{loginId} {
+      allow get: if isSignedIn() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow list: if isAdmin();
+      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    match /admin_notifications/{notificationId} {
+      allow get, list: if isAdmin();
+      allow create: if isSignedIn();
+      allow update, delete: if isAdmin();
+    }
+
+    match /app_settings/{document=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

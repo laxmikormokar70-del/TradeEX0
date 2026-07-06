@@ -1,0 +1,8 @@
+{
+  "name": "TradeEX",
+  "description": "A premium high-fidelity futures and multi-asset trading platform with professional margin statistics, orange premium branding, and verified user authentication.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

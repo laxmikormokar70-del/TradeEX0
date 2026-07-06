@@ -1,0 +1,246 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User profile document containing basic trading account profile details",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Unique identifier of the user (Firebase Auth UID)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Full display name of the user"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Email address of the user"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Mobile number of the user"
+        },
+        "dob": {
+          "type": "string",
+          "description": "Date of birth of the user"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp of the profile"
+        },
+        "profilePhoto": {
+          "type": "string",
+          "description": "Profile picture URL"
+        },
+        "securitySecret": {
+          "type": "string",
+          "description": "A secret key used to generate cryptographic OTP security codes"
+        },
+        "customUid": {
+          "type": "string",
+          "description": "Unique auto-generated DX UID"
+        },
+        "country": {
+          "type": "string",
+          "description": "Country of residence"
+        },
+        "state": {
+          "type": "string",
+          "description": "State/Province of residence"
+        },
+        "city": {
+          "type": "string",
+          "description": "City of residence"
+        },
+        "address": {
+          "type": "string",
+          "description": "Full physical address"
+        },
+        "gender": {
+          "type": "string",
+          "description": "Gender of the user"
+        },
+        "verified": {
+          "type": "boolean",
+          "description": "User verification status"
+        },
+        "currencyPreference": {
+          "type": "string",
+          "description": "User preferred display currency ('USDT' | 'INR')"
+        },
+        "role": {
+          "type": "string",
+          "description": "Role of the user, empty or 'user' or 'admin'"
+        },
+        "status": {
+          "type": "string",
+          "description": "Account status, 'active' or 'suspended'"
+        },
+        "kycStatus": {
+          "type": "string",
+          "description": "KYC state, 'not_started' or 'pending' or 'approved' or 'rejected'"
+        }
+      },
+      "required": ["uid", "name", "email", "createdAt"]
+    },
+    "Deposit": {
+      "title": "Deposit",
+      "description": "A deposit transaction submitted by a user",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "amount": { "type": "number" },
+        "currency": { "type": "string" },
+        "status": { "type": "string" },
+        "paymentMethod": { "type": "string" },
+        "txId": { "type": "string" },
+        "phonepeTxnId": { "type": "string", "description": "The exact PhonePe transaction reference ID extracted" },
+        "utr": { "type": "string", "description": "The exact 12-digit payment UTR reference code extracted" },
+        "screenshot": { "type": "string", "description": "Base64 encoded image upload content to render on admin panel" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["uid", "amount", "currency", "status"]
+    },
+    "Withdrawal": {
+      "title": "Withdrawal",
+      "description": "A withdrawal request submitted by a user",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "amount": { "type": "number" },
+        "currency": { "type": "string" },
+        "status": { "type": "string" },
+        "txId": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["uid", "amount", "currency", "status"]
+    },
+    "KycSubmission": {
+      "title": "KYC Submission",
+      "description": "Documents uploaded for identity verification",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "fullname": { "type": "string" },
+        "dob": { "type": "string" },
+        "country": { "type": "string" },
+        "state": { "type": "string" },
+        "city": { "type": "string" },
+        "address": { "type": "string" },
+        "gender": { "type": "string" },
+        "docFront": { "type": "string" },
+        "docBack": { "type": "string" },
+        "selfie": { "type": "string" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["uid", "fullname", "status"]
+    },
+    "SupportTicket": {
+      "title": "Support Ticket",
+      "description": "A user complaint, report, or support request",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "subject": { "type": "string" },
+        "message": { "type": "string" },
+        "category": { "type": "string" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["uid", "subject", "message", "status"]
+    },
+    "LoginHistory": {
+      "title": "Login History",
+      "description": "Log of login audit events",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "loginTime": { "type": "string" },
+        "logoutTime": { "type": "string" },
+        "ipAddress": { "type": "string" },
+        "deviceType": { "type": "string" },
+        "browser": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["uid", "email", "loginTime"]
+    },
+    "AdminNotification": {
+      "title": "Admin Notification",
+      "description": "System event notifications for administrators",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "type": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "read": { "type": "boolean" }
+      },
+      "required": ["title", "message", "type", "createdAt"]
+    },
+    "DailyMarketData": {
+      "title": "Daily Market Data",
+      "description": "Fixed daily parameters for market instruments updated once per day",
+      "type": "object",
+      "properties": {
+        "symbol": { "type": "string" },
+        "date": { "type": "string", "description": "ISO date string for the day (YYYY-MM-DD)" },
+        "basePrice": { "type": "number" },
+        "openingPrice": { "type": "number" },
+        "movementRange": { "type": "number", "description": "Daily movement range in percentage (e.g., 3.0)" },
+        "lotValue": { "type": "number" },
+        "pnlRatio": { "type": "number" },
+        "volatility": { "type": "number" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["symbol", "date", "basePrice", "openingPrice", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Primary user profiles collection mapped by authentication UID"
+    },
+    "/deposits/{depositId}": {
+      "schema": "Deposit",
+      "description": "Financial deposit transactions tracking"
+    },
+    "/withdrawals/{withdrawalId}": {
+      "schema": "Withdrawal",
+      "description": "Financial withdrawal requests tracking"
+    },
+    "/kyc_submissions/{submissionId}": {
+      "schema": "KycSubmission",
+      "description": "Dedicated KYC sub-collection or separate collection"
+    },
+    "/tickets/{ticketId}": {
+      "schema": "SupportTicket",
+      "description": "User support tickets, complaints, and reports"
+    },
+    "/logins/{loginId}": {
+      "schema": "LoginHistory",
+      "description": "User login audit trails and activity monitor"
+    },
+    "/admin_notifications/{notificationId}": {
+      "schema": "AdminNotification",
+      "description": "System notifications pushed to the exchange dashboard"
+    },
+    "/daily_market_data/{symbol_date}": {
+      "schema": "DailyMarketData",
+      "description": "Fixed daily price parameters for instruments"
+    }
+  }
+}

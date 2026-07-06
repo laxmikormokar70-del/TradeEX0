@@ -1,0 +1,22 @@
+{
+  "name": "TradeEX",
+  "short_name": "TradeEX",
+  "description": "Premium Futures & Multi-Asset Trading",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ff8c2a",
+  "icons": [
+    {
+      "src": "https://i.ibb.co/W4zjpw4c/upscalemedia-transformed.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://i.ibb.co/W4zjpw4c/upscalemedia-transformed.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

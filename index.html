@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TradeEX - Premium Futures & Multi-Asset Trading</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/W4zjpw4c/upscalemedia-transformed.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="https://i.ibb.co/W4zjpw4c/upscalemedia-transformed.png" />
+    <meta name="theme-color" content="#ff8c2a" />
+    <meta name="google-site-verification" content="EkA9Y6mSh9cy-lA_h0VhhOqPMEoeKv-cGvUknChJNG8" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(error => {
+            console.log('SW Registration failed:', error);
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
+
